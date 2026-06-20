@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box, Typography, Grid, CardContent, TextField, Chip, Pagination,
@@ -14,8 +14,8 @@ import {
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SportEvent, Sport, EventSearchParams, SKILL_LEVEL_LABELS } from '../../types';
-import * as eventsApi from '../../api/events';
-import * as sportsApi from '../../api/sports';
+import { useSports } from '../../hooks/useSports';
+import { useEventSearch } from '../../hooks/useEventSearch';
 import { EVENT_STATUS_LABELS } from '../../types';
 import { getSportIcon } from '../../utils/sportIcons';
 import EventsMapView from '../../components/EventsMapView';
@@ -32,10 +32,6 @@ export default function EventListPage() {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [events, setEvents] = useState<SportEvent[]>([]);
-  const [sports, setSports] = useState<Sport[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
   const [selectedSport, setSelectedSport] = useState<number | ''>('');
   const [showFull, setShowFull] = useState(true);
@@ -52,27 +48,22 @@ export default function EventListPage() {
   const [locationLoading, setLocationLoading] = useState(false);
   const pageSize = 12;
 
-  useEffect(() => {
-    sportsApi.getAll().then(({ data }) => setSports(data)).catch(() => {});
-  }, []);
+  const { data: sports = [] } = useSports();
 
-  useEffect(() => {
-    setLoading(true);
-    const statuses = showFull ? ['Open', 'Full'] : ['Open'];
-    const params: EventSearchParams = {
-      keyword: keyword || undefined,
-      sportIds: selectedSport ? [selectedSport as number] : undefined,
-      dateFrom: dateFrom ? dateFrom.format('YYYY-MM-DD') : undefined,
-      dateTo: dateTo ? dateTo.format('YYYY-MM-DD') : undefined,
-      minSkillLevel: minSkillLevel || undefined,
-      statuses, sortBy, page, pageSize,
-      lat: userLat, lng: userLng, radiusKm,
-    };
-    eventsApi.search(params)
-      .then(({ data }) => { setEvents(data.items); setTotalCount(data.totalCount); })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [keyword, selectedSport, dateFrom, dateTo, minSkillLevel, showFull, sortBy, page, userLat, userLng, radiusKm]);
+  const searchParams = useMemo<EventSearchParams>(() => ({
+    keyword: keyword || undefined,
+    sportIds: selectedSport ? [selectedSport as number] : undefined,
+    dateFrom: dateFrom ? dateFrom.format('YYYY-MM-DD') : undefined,
+    dateTo: dateTo ? dateTo.format('YYYY-MM-DD') : undefined,
+    minSkillLevel: minSkillLevel || undefined,
+    statuses: showFull ? ['Open', 'Full'] : ['Open'],
+    sortBy, page, pageSize,
+    lat: userLat, lng: userLng, radiusKm,
+  }), [keyword, selectedSport, dateFrom, dateTo, minSkillLevel, showFull, sortBy, page, userLat, userLng, radiusKm]);
+
+  const { data: searchResult, isFetching: loading } = useEventSearch(searchParams);
+  const events = searchResult?.items ?? [];
+  const totalCount = searchResult?.totalCount ?? 0;
 
   const handleUseMyLocation = () => {
     if (navigator.geolocation) {
