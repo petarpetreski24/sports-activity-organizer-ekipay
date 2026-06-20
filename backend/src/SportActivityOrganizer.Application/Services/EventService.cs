@@ -287,46 +287,58 @@ public class EventService : IEventService
                 e.LocationLng >= minLng && e.LocationLng <= maxLng);
         }
 
-        // Materialize the query to apply Haversine in memory
-        var allEvents = await query.ToListAsync();
-
-        // Apply exact Haversine distance filter if geo search
-        if (userLat.HasValue && userLng.HasValue)
-        {
-            allEvents = allEvents.Where(e =>
-            {
-                var distance = CalculateHaversineDistance(
-                    userLat.Value, userLng.Value,
-                    (double)e.LocationLat, (double)e.LocationLng);
-                return distance <= radiusKm;
-            }).ToList();
-        }
-
-        var totalCount = allEvents.Count;
-
-        // Sorting
-        var sortBy = request.SortBy?.ToLower() ?? "date";
-
-        IEnumerable<SportEvent> sorted = sortBy switch
-        {
-            "distance" when userLat.HasValue && userLng.HasValue =>
-                allEvents.OrderBy(e => CalculateHaversineDistance(
-                    userLat.Value, userLng.Value,
-                    (double)e.LocationLat, (double)e.LocationLng)),
-            "rating" =>
-                allEvents.OrderByDescending(e => e.AvgRating ?? 0),
-            _ => // "date" is default
-                allEvents.OrderBy(e => e.EventDate)
-        };
-
-        // Pagination
         var page = request.Page > 0 ? request.Page : 1;
         var pageSize = request.PageSize > 0 ? request.PageSize : 20;
+        var sortBy = request.SortBy?.ToLower() ?? "date";
 
-        var pagedEvents = sorted
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
+        List<SportEvent> pagedEvents;
+        int totalCount;
+
+        if (userLat.HasValue && userLng.HasValue)
+        {
+            // Geo search: the bounding box is already applied in the query, which
+            // bounds the row count. Exact Haversine distance filtering and
+            // distance sorting can only be done in memory, so materialise the
+            // (already bounded) candidate set and then filter/sort/page it.
+            var candidates = await query.ToListAsync();
+
+            var filtered = candidates.Where(e =>
+                CalculateHaversineDistance(
+                    userLat.Value, userLng.Value,
+                    (double)e.LocationLat, (double)e.LocationLng) <= radiusKm);
+
+            IEnumerable<SportEvent> sorted = sortBy switch
+            {
+                "distance" => filtered.OrderBy(e => CalculateHaversineDistance(
+                    userLat.Value, userLng.Value,
+                    (double)e.LocationLat, (double)e.LocationLng)),
+                "rating" => filtered.OrderByDescending(e => e.AvgRating ?? 0),
+                _ => filtered.OrderBy(e => e.EventDate)
+            };
+
+            var sortedList = sorted.ToList();
+            totalCount = sortedList.Count;
+            pagedEvents = sortedList
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+        }
+        else
+        {
+            // Non-geo search: sort, count and page entirely at the database so we
+            // never materialise more than one page of results.
+            query = sortBy switch
+            {
+                "rating" => query.OrderByDescending(e => e.AvgRating ?? 0),
+                _ => query.OrderBy(e => e.EventDate) // "date" default ("distance" needs geo)
+            };
+
+            totalCount = await query.CountAsync();
+            pagedEvents = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
 
         var items = _mapper.Map<List<SportEventDto>>(pagedEvents);
 
