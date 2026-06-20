@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -75,6 +76,21 @@ builder.Services.AddHostedService<EventBackgroundService>();
 // Controllers
 builder.Services.AddControllers();
 
+// Health checks (liveness/readiness probe)
+builder.Services.AddHealthChecks();
+
+// Rate limiting — a stricter fixed window for auth endpoints to slow brute force
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddFixedWindowLimiter("auth", o =>
+    {
+        o.PermitLimit = 10;
+        o.Window = TimeSpan.FromMinutes(1);
+        o.QueueLimit = 0;
+    });
+});
+
 // CORS
 builder.Services.AddCors(options =>
 {
@@ -145,6 +161,8 @@ app.UseSwaggerUI();
 
 app.UseCors("AllowFrontend");
 
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -152,5 +170,6 @@ app.UseAuthorization();
 app.UseStaticFiles();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
