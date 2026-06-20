@@ -24,7 +24,7 @@ public class AuthService : IAuthService
         _mapper = mapper;
     }
 
-    public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
+    public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
     {
         // FR-1.5: Password validation — min 8 chars, at least one uppercase, at least one digit
         if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 8)
@@ -67,22 +67,16 @@ public class AuthService : IAuthService
             UpdatedAt = DateTime.UtcNow
         };
         await _unitOfWork.NotificationPreferences.AddAsync(notificationPreference);
+        await _unitOfWork.SaveChangesAsync();
 
         // Send confirmation email
         await _emailService.SendEmailConfirmationAsync(user.Email, emailConfirmationToken);
 
-        var accessToken = _tokenService.GenerateAccessToken(user);
-        var refreshToken = _tokenService.GenerateRefreshToken();
-
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
-        user.UpdatedAt = DateTime.UtcNow;
-        await _unitOfWork.SaveChangesAsync();
-
-        return new AuthResponse(
-            AccessToken: accessToken,
-            RefreshToken: refreshToken,
-            User: _mapper.Map<UserDto>(user));
+        // FR-1.6: the user must confirm their email before they can log in,
+        // so registration does NOT issue authentication tokens.
+        return new RegisterResponse(
+            Email: user.Email,
+            Message: "Регистрацијата е успешна. Проверете го вашиот email за да ја потврдите адресата пред да се најавите.");
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)

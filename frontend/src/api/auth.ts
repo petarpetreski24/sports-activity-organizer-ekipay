@@ -2,7 +2,7 @@ import api from './axios';
 import { AuthResponse } from '../types';
 
 export const register = (data: { firstName: string; lastName: string; email: string; password: string }) =>
-  api.post<AuthResponse>('/api/auth/register', data);
+  api.post<{ email: string; message: string }>('/api/auth/register', data);
 
 export const login = (data: { email: string; password: string }) =>
   api.post<AuthResponse>('/api/auth/login', data);

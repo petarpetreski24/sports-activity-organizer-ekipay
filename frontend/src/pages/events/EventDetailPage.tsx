@@ -478,8 +478,8 @@ export default function EventDetailPage() {
             </motion.div>
           )}
 
-          {/* Comments Section - visible to all authenticated users */}
-          {isAuthenticated && (
+          {/* Comments Section - only accepted participants, organizer, and admin */}
+          {isAuthenticated && isApproved && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
               <SectionHeader icon={<Chat />} title="Коментари" count={comments.length} />
               <GlassCard sx={{ mb: 3 }}>

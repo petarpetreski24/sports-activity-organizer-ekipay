@@ -23,8 +23,9 @@ export default function RegisterPage() {
     try {
       setError('');
       await registerUser(data.firstName, data.lastName, data.email, data.password);
-      setSuccess('Регистрацијата е успешна! Проверете го вашиот email за потврда.');
-      setTimeout(() => navigate('/profile/edit?welcome=true'), 2000);
+      // FR-1.6: the user must confirm their email before logging in.
+      setSuccess('Регистрацијата е успешна! Проверете го вашиот email за потврда, потоа најавете се.');
+      setTimeout(() => navigate('/login?registered=true'), 2500);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Грешка при регистрација.');
     }

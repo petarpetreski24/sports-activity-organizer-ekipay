@@ -58,9 +58,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (firstName: string, lastName: string, email: string, password: string) => {
+    // FR-1.6: registration does not log the user in. They must confirm their
+    // email first, so no tokens are stored here.
     const { data } = await authApi.register({ firstName, lastName, email, password });
-    saveTokens(data);
-    return data.user.email;
+    return data.email;
   };
 
   const logout = () => {

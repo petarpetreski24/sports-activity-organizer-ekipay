@@ -23,3 +23,10 @@ obj/
 *.user
 *.suo
 .env
+
+# Local docker override
+docker-compose.override.yml
+
+# Local run logs & tooling
+*.log
+.claude/

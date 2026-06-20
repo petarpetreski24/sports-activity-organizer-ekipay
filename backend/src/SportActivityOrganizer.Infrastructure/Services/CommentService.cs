@@ -21,15 +21,23 @@ public class CommentService : ICommentService
         _notificationService = notificationService;
     }
 
-    public async Task<List<EventCommentDto>> GetEventCommentsAsync(int userId, int eventId)
+    public async Task<List<EventCommentDto>> GetEventCommentsAsync(int userId, int eventId, bool isAdmin)
     {
         var sportEvent = await _unitOfWork.SportEvents.Query()
+            .Include(e => e.Applications)
             .FirstOrDefaultAsync(e => e.Id == eventId);
 
         if (sportEvent == null)
             throw new KeyNotFoundException("Event not found.");
 
-        // Any authenticated user can read comments
+        // FR-6.5: only the organizer, approved participants (and admins) may
+        // read the event's comments. Users still awaiting approval must not.
+        var isOrganizer = sportEvent.OrganizerId == userId;
+        var isParticipant = sportEvent.Applications
+            .Any(a => a.UserId == userId && a.Status == ApplicationStatus.Approved);
+
+        if (!isAdmin && !isOrganizer && !isParticipant)
+            throw new UnauthorizedAccessException("Only the organizer or approved participants can view comments.");
 
         var comments = await _unitOfWork.EventComments.Query()
             .Include(c => c.User)

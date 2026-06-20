@@ -180,7 +180,27 @@ public class AdminService : IAdminService
             sportEvent.UpdatedAt = DateTime.UtcNow;
         }
 
-        _unitOfWork.Users.Remove(user);
+        // DBR-1.3: deleting a user must NOT remove related events/ratings.
+        // Perform a soft delete — deactivate, anonymize personal data and
+        // invalidate credentials, while keeping referential integrity.
+        user.IsActive = false;
+        user.FirstName = "Избришан";
+        user.LastName = "корисник";
+        user.Email = $"deleted_user_{user.Id}@deleted.local";
+        user.Phone = null;
+        user.Bio = null;
+        user.ProfilePhotoUrl = null;
+        user.LocationCity = null;
+        user.LocationLat = null;
+        user.LocationLng = null;
+        user.PasswordHash = string.Empty;
+        user.EmailConfirmationToken = null;
+        user.PasswordResetToken = null;
+        user.PasswordResetTokenExpiry = null;
+        user.RefreshToken = null;
+        user.RefreshTokenExpiry = null;
+        user.UpdatedAt = DateTime.UtcNow;
+
         await _unitOfWork.SaveChangesAsync();
     }
 

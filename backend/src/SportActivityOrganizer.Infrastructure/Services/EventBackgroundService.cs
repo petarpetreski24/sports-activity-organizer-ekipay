@@ -27,6 +27,7 @@ public class EventBackgroundService : BackgroundService
         {
             try
             {
+                await MarkInProgressEvents(stoppingToken);
                 await AutoCompleteExpiredEvents(stoppingToken);
                 await SendEventReminders(stoppingToken);
             }
@@ -37,6 +38,34 @@ public class EventBackgroundService : BackgroundService
 
             // Run every 5 minutes
             await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+        }
+    }
+
+    private async Task MarkInProgressEvents(CancellationToken ct)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+        var now = DateTime.UtcNow;
+
+        // FR-3.5: an event is "in progress" between its start time and its end
+        // (start + duration). Move Open/Full events into that state.
+        var startingEvents = await unitOfWork.SportEvents.Query()
+            .Where(e => (e.Status == EventStatus.Open || e.Status == EventStatus.Full) &&
+                        e.EventDate <= now &&
+                        e.EventDate.AddMinutes(e.DurationMinutes) > now)
+            .ToListAsync(ct);
+
+        if (startingEvents.Count > 0)
+        {
+            foreach (var evt in startingEvents)
+            {
+                evt.Status = EventStatus.InProgress;
+                evt.UpdatedAt = now;
+            }
+
+            await unitOfWork.SaveChangesAsync(ct);
+            _logger.LogInformation("Marked {Count} events as in progress.", startingEvents.Count);
         }
     }
 

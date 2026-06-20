@@ -24,7 +24,7 @@ public class EventCommentsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<EventCommentDto>>> GetComments(int eventId)
     {
-        var result = await _commentService.GetEventCommentsAsync(GetUserId(), eventId);
+        var result = await _commentService.GetEventCommentsAsync(GetUserId(), eventId, IsAdmin());
         return Ok(result);
     }
 
