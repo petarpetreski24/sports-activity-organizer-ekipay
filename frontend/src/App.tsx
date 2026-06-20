@@ -1,45 +1,49 @@
+import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
 
-// Auth pages
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from './pages/auth/ResetPasswordPage';
-import ConfirmEmailPage from './pages/auth/ConfirmEmailPage';
+// Pages are lazy-loaded so each route ships as its own chunk (smaller initial bundle).
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
+const ConfirmEmailPage = lazy(() => import('./pages/auth/ConfirmEmailPage'));
 
-// Landing
-import LandingPage from './pages/LandingPage';
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 
-// Main pages
-import DashboardPage from './pages/dashboard/DashboardPage';
-import EventListPage from './pages/events/EventListPage';
-import EventDetailPage from './pages/events/EventDetailPage';
-import CreateEventPage from './pages/events/CreateEventPage';
-import EditEventPage from './pages/events/EditEventPage';
-import MyEventsPage from './pages/events/MyEventsPage';
+const DashboardPage = lazy(() => import('./pages/dashboard/DashboardPage'));
+const EventListPage = lazy(() => import('./pages/events/EventListPage'));
+const EventDetailPage = lazy(() => import('./pages/events/EventDetailPage'));
+const CreateEventPage = lazy(() => import('./pages/events/CreateEventPage'));
+const EditEventPage = lazy(() => import('./pages/events/EditEventPage'));
+const MyEventsPage = lazy(() => import('./pages/events/MyEventsPage'));
 
-// Profile pages
-import ProfilePage from './pages/profile/ProfilePage';
-import EditProfilePage from './pages/profile/EditProfilePage';
-import PublicProfilePage from './pages/profile/PublicProfilePage';
+const ProfilePage = lazy(() => import('./pages/profile/ProfilePage'));
+const EditProfilePage = lazy(() => import('./pages/profile/EditProfilePage'));
+const PublicProfilePage = lazy(() => import('./pages/profile/PublicProfilePage'));
 
-// Notifications
-import NotificationsPage from './pages/notifications/NotificationsPage';
-import NotificationPreferencesPage from './pages/notifications/NotificationPreferencesPage';
+const NotificationsPage = lazy(() => import('./pages/notifications/NotificationsPage'));
+const NotificationPreferencesPage = lazy(() => import('./pages/notifications/NotificationPreferencesPage'));
 
-// Community
-import CommunityPage from './pages/CommunityPage';
+const CommunityPage = lazy(() => import('./pages/CommunityPage'));
 
-// Admin pages
-import AdminDashboardPage from './pages/admin/AdminDashboardPage';
-import ManageUsersPage from './pages/admin/ManageUsersPage';
-import ManageSportsPage from './pages/admin/ManageSportsPage';
-import ManageEventsPage from './pages/admin/ManageEventsPage';
-import ManageReportsPage from './pages/admin/ManageReportsPage';
-import AdminCreateEventPage from './pages/admin/AdminCreateEventPage';
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
+const ManageUsersPage = lazy(() => import('./pages/admin/ManageUsersPage'));
+const ManageSportsPage = lazy(() => import('./pages/admin/ManageSportsPage'));
+const ManageEventsPage = lazy(() => import('./pages/admin/ManageEventsPage'));
+const ManageReportsPage = lazy(() => import('./pages/admin/ManageReportsPage'));
+const AdminCreateEventPage = lazy(() => import('./pages/admin/AdminCreateEventPage'));
+
+function PageFallback() {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+}
 
 function HomeRedirect() {
   const { isAuthenticated, isLoading, isAdmin } = useAuth();
@@ -57,6 +61,7 @@ function GuestOnly({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
+    <Suspense fallback={<PageFallback />}>
     <Routes>
       {/* Landing page for unauthenticated, dashboard for authenticated */}
       <Route path="/" element={<HomeRedirect />} />
@@ -103,5 +108,6 @@ export default function App() {
       {/* Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   );
 }
