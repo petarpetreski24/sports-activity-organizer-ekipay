@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" font-family="Arial, sans-serif">
+  <rect width="960" height="600" fill="#ffffff"/>
+  <defs>
+    <marker id="sr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <text x="480" y="34" font-size="21" font-weight="bold" fill="#1e293b" text-anchor="middle">Секвенцен дијаграм — Регистрација и потврда на е-пошта</text>
+
+  <g font-size="13" font-weight="bold" text-anchor="middle">
+    <rect x="30"  y="56" width="140" height="42" rx="8" fill="#eff4ff" stroke="#1a56db"/><text x="100" y="82" fill="#1a56db">Корисник</text>
+    <rect x="240" y="56" width="140" height="42" rx="8" fill="#ecfdf5" stroke="#059669"/><text x="310" y="82" fill="#047857">SPA (Frontend)</text>
+    <rect x="450" y="56" width="140" height="42" rx="8" fill="#ecfdf5" stroke="#059669"/><text x="520" y="82" fill="#047857">Backend (API)</text>
+    <rect x="650" y="56" width="120" height="42" rx="8" fill="#fffbeb" stroke="#b45309"/><text x="710" y="82" fill="#b45309">База</text>
+    <rect x="820" y="56" width="120" height="42" rx="8" fill="#f1f5f9" stroke="#475569"/><text x="880" y="82" fill="#334155">SendGrid</text>
+  </g>
+
+  <g stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4,4">
+    <line x1="100" y1="98" x2="100" y2="560"/>
+    <line x1="310" y1="98" x2="310" y2="560"/>
+    <line x1="520" y1="98" x2="520" y2="560"/>
+    <line x1="710" y1="98" x2="710" y2="560"/>
+    <line x1="880" y1="98" x2="880" y2="560"/>
+  </g>
+
+  <g font-size="11.5" fill="#334155">
+    <line x1="100" y1="135" x2="308" y2="135" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="106" y="128">внеси податоци · „Регистрирај се“</text>
+
+    <line x1="310" y1="170" x2="518" y2="170" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="316" y="163">POST /api/auth/register</text>
+
+    <rect x="486" y="186" width="170" height="26" rx="5" fill="#fef9c3" stroke="#ca8a04"/>
+    <text x="496" y="204" font-size="11">валидација лозинка (FR-1.5)</text>
+
+    <line x1="520" y1="240" x2="708" y2="240" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="526" y="233">креирај корисник (EmailConfirmed=false, токен)</text>
+
+    <line x1="520" y1="275" x2="878" y2="275" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="526" y="268">испрати e-mail за потврда</text>
+
+    <line x1="520" y1="310" x2="312" y2="310" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sr)"/>
+    <text x="316" y="303" fill="#64748b">200 (без токен)</text>
+    <line x1="310" y1="340" x2="102" y2="340" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sr)"/>
+    <text x="106" y="333" fill="#64748b">пренасочи кон /login + порака</text>
+  </g>
+
+  <line x1="30" y1="365" x2="940" y2="365" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="381" font-size="11.5" font-style="italic" fill="#94a3b8">корисникот ја отвора пораката и кликнува на линкот за потврда</text>
+
+  <g font-size="11.5" fill="#334155">
+    <line x1="100" y1="415" x2="518" y2="415" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="106" y="408">GET /api/auth/confirm-email?token=…</text>
+
+    <line x1="520" y1="450" x2="708" y2="450" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="526" y="443">EmailConfirmed = true</text>
+
+    <line x1="520" y1="485" x2="102" y2="485" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sr)"/>
+    <text x="106" y="478" fill="#64748b">пренасочи кон /login?emailConfirmed=true</text>
+
+    <line x1="100" y1="520" x2="518" y2="520" stroke="#334155" stroke-width="1.6" marker-end="url(#sr)"/>
+    <text x="106" y="513">најава (e-mail + лозинка) → 200 + JWT токени</text>
+  </g>
+</svg>

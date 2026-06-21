@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="430" viewBox="0 0 940 430" font-family="Arial, sans-serif">
+  <rect width="940" height="430" fill="#ffffff"/>
+  <defs>
+    <marker id="a3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <text x="470" y="36" font-size="22" font-weight="bold" fill="#1e293b" text-anchor="middle">Состојби на настан (state machine)</text>
+
+  <!-- start -->
+  <circle cx="60" cy="150" r="9" fill="#1e293b"/>
+  <line x1="69" y1="150" x2="120" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+
+  <!-- Open -->
+  <rect x="120" y="118" width="150" height="64" rx="14" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+  <text x="195" y="146" font-size="16" font-weight="bold" fill="#047857" text-anchor="middle">Отворен</text>
+  <text x="195" y="168" font-size="11.5" fill="#64748b" text-anchor="middle">прима пријави</text>
+
+  <!-- Full -->
+  <rect x="360" y="118" width="150" height="64" rx="14" fill="#eff6ff" stroke="#1a56db" stroke-width="2.5"/>
+  <text x="435" y="146" font-size="16" font-weight="bold" fill="#1a56db" text-anchor="middle">Полн</text>
+  <text x="435" y="168" font-size="11.5" fill="#64748b" text-anchor="middle">сите места зафатени</text>
+
+  <!-- InProgress -->
+  <rect x="600" y="118" width="150" height="64" rx="14" fill="#fffbeb" stroke="#b45309" stroke-width="2.5"/>
+  <text x="675" y="146" font-size="16" font-weight="bold" fill="#b45309" text-anchor="middle">Во тек</text>
+  <text x="675" y="168" font-size="11.5" fill="#64748b" text-anchor="middle">се одржува</text>
+
+  <!-- Completed -->
+  <rect x="760" y="300" width="150" height="64" rx="14" fill="#f1f5f9" stroke="#475569" stroke-width="2.5"/>
+  <text x="835" y="328" font-size="16" font-weight="bold" fill="#334155" text-anchor="middle">Завршен</text>
+  <text x="835" y="350" font-size="11.5" fill="#64748b" text-anchor="middle">отворено оценување (7 дена)</text>
+
+  <!-- Cancelled -->
+  <rect x="120" y="300" width="150" height="64" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="195" y="328" font-size="16" font-weight="bold" fill="#dc2626" text-anchor="middle">Откажан</text>
+  <text x="195" y="350" font-size="11.5" fill="#64748b" text-anchor="middle">од организатор</text>
+
+  <!-- Open <-> Full -->
+  <line x1="270" y1="140" x2="360" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="315" y="132" font-size="11" fill="#64748b" text-anchor="middle">макс. одобрени</text>
+  <line x1="360" y1="162" x2="270" y2="162" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="315" y="178" font-size="11" fill="#64748b" text-anchor="middle">откажан учесник</text>
+
+  <!-- Full -> InProgress -->
+  <line x1="510" y1="150" x2="600" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="555" y="142" font-size="11" fill="#64748b" text-anchor="middle">почеток</text>
+
+  <!-- InProgress -> Completed -->
+  <line x1="700" y1="182" x2="800" y2="300" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="775" y="244" font-size="11" fill="#64748b">истек на времетраење</text>
+
+  <!-- Open -> Cancelled / Full -> Cancelled -->
+  <line x1="180" y1="182" x2="180" y2="300" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="118" y="244" font-size="11" fill="#64748b">откажи</text>
+  <line x1="380" y1="182" x2="250" y2="300" stroke="#475569" stroke-width="2" marker-end="url(#a3)"/>
+
+  <text x="60" y="404" font-size="12.5" fill="#64748b">Преминот Отворен→Полн и Полн→Отворен е автоматски (при одобрување/откажување). Премините Во тек и Завршен</text>
+  <text x="60" y="422" font-size="12.5" fill="#64748b">ги извршува позадинскиот сервис (EventBackgroundService) според датумот и времетраењето на настанот.</text>
+</svg>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="560" viewBox="0 0 940 560" font-family="Arial, sans-serif">
+  <rect width="940" height="560" fill="#ffffff"/>
+  <defs>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <text x="470" y="38" font-size="22" font-weight="bold" fill="#1e293b" text-anchor="middle">Дијаграм на распоред (Deployment)</text>
+
+  <!-- Browser / SPA -->
+  <rect x="40" y="90" width="220" height="96" rx="10" fill="#eff4ff" stroke="#1a56db" stroke-width="2"/>
+  <text x="150" y="120" font-size="15" font-weight="bold" fill="#1a56db" text-anchor="middle">Веб прелистувач</text>
+  <text x="150" y="144" font-size="12.5" fill="#334155" text-anchor="middle">React SPA (EkipAY)</text>
+  <text x="150" y="164" font-size="12" fill="#64748b" text-anchor="middle">TypeScript · Material UI</text>
+
+  <!-- Google Maps -->
+  <rect x="700" y="90" width="200" height="70" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="800" y="120" font-size="14" font-weight="bold" fill="#334155" text-anchor="middle">Google Maps</text>
+  <text x="800" y="142" font-size="12" fill="#64748b" text-anchor="middle">JavaScript API</text>
+
+  <!-- Frontend hosting -->
+  <rect x="40" y="250" width="220" height="92" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="150" y="278" font-size="14" font-weight="bold" fill="#334155" text-anchor="middle">Frontend хостинг</text>
+  <text x="150" y="300" font-size="12.5" fill="#334155" text-anchor="middle">nginx (статички фајлови)</text>
+  <text x="150" y="322" font-size="12" fill="#64748b" text-anchor="middle">Railway · filda.cfd</text>
+
+  <!-- Backend API -->
+  <rect x="370" y="240" width="230" height="110" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="485" y="270" font-size="15" font-weight="bold" fill="#047857" text-anchor="middle">Backend API</text>
+  <text x="485" y="292" font-size="12.5" fill="#334155" text-anchor="middle">.NET 8 · ASP.NET Core</text>
+  <text x="485" y="312" font-size="12.5" fill="#334155" text-anchor="middle">REST · JWT</text>
+  <text x="485" y="332" font-size="12" fill="#64748b" text-anchor="middle">Railway · api.filda.cfd</text>
+
+  <!-- PostgreSQL -->
+  <rect x="700" y="250" width="200" height="92" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+  <text x="800" y="280" font-size="14" font-weight="bold" fill="#b45309" text-anchor="middle">PostgreSQL</text>
+  <text x="800" y="302" font-size="12.5" fill="#334155" text-anchor="middle">релациона база</text>
+  <text x="800" y="324" font-size="12" fill="#64748b" text-anchor="middle">Railway</text>
+
+  <!-- SendGrid -->
+  <rect x="370" y="420" width="230" height="70" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="485" y="450" font-size="14" font-weight="bold" fill="#334155" text-anchor="middle">SendGrid</text>
+  <text x="485" y="472" font-size="12" fill="#64748b" text-anchor="middle">e-mail (HTTP API)</text>
+
+  <!-- GitHub -->
+  <rect x="40" y="420" width="220" height="70" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="150" y="450" font-size="14" font-weight="bold" fill="#334155" text-anchor="middle">GitHub Actions</text>
+  <text x="150" y="472" font-size="12" fill="#64748b" text-anchor="middle">CI: build · test · deploy</text>
+
+  <!-- arrows -->
+  <!-- frontend serves SPA -->
+  <line x1="150" y1="250" x2="150" y2="188" stroke="#475569" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="160" y="222" font-size="11.5" fill="#64748b">сервира SPA (HTTPS)</text>
+  <!-- SPA -> API -->
+  <line x1="260" y1="150" x2="430" y2="240" stroke="#475569" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="262" y="184" font-size="11.5" fill="#64748b">REST/JSON · HTTPS · JWT</text>
+  <!-- SPA -> Maps -->
+  <line x1="260" y1="120" x2="700" y2="120" stroke="#475569" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="430" y="110" font-size="11.5" fill="#64748b">HTTPS</text>
+  <!-- API -> DB -->
+  <line x1="600" y1="295" x2="700" y2="295" stroke="#475569" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="604" y="285" font-size="11.5" fill="#64748b">EF Core · TCP 5432</text>
+  <!-- API -> SendGrid -->
+  <line x1="485" y1="350" x2="485" y2="420" stroke="#475569" stroke-width="2" marker-end="url(#a2)"/>
+  <text x="495" y="392" font-size="11.5" fill="#64748b">HTTPS</text>
+  <!-- GitHub -> frontend & backend -->
+  <line x1="150" y1="420" x2="150" y2="342" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#a2)"/>
+  <line x1="260" y1="455" x2="370" y2="455" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <line x1="345" y1="455" x2="345" y2="350" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#a2)"/>
+  <text x="60" y="392" font-size="11" fill="#94a3b8">deploy</text>
+
+  <text x="40" y="528" font-size="12.5" fill="#64748b">Целата комуникација клиент–сервер се одвива преку HTTPS. Backend и Frontend се распоредени како посебни</text>
+  <text x="40" y="546" font-size="12.5" fill="#64748b">сервиси на Railway; деплојот се активира автоматски при push на гранката main.</text>
+</svg>

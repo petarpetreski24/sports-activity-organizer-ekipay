@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="650" viewBox="0 0 960 650" font-family="Arial, sans-serif">
+  <rect width="960" height="650" fill="#ffffff"/>
+  <defs>
+    <marker id="sa" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <text x="480" y="34" font-size="21" font-weight="bold" fill="#1e293b" text-anchor="middle">Секвенцен дијаграм — Пријава и одобрување на учесник</text>
+
+  <!-- headers -->
+  <g font-size="13" font-weight="bold" text-anchor="middle">
+    <rect x="20"  y="56" width="140" height="42" rx="8" fill="#eff4ff" stroke="#1a56db"/><text x="90"  y="82" fill="#1a56db">Учесник</text>
+    <rect x="220" y="56" width="140" height="42" rx="8" fill="#eff4ff" stroke="#1a56db"/><text x="290" y="82" fill="#1a56db">Организатор</text>
+    <rect x="410" y="56" width="140" height="42" rx="8" fill="#ecfdf5" stroke="#059669"/><text x="480" y="82" fill="#047857">SPA (Frontend)</text>
+    <rect x="600" y="56" width="140" height="42" rx="8" fill="#ecfdf5" stroke="#059669"/><text x="670" y="82" fill="#047857">Backend (API)</text>
+    <rect x="790" y="56" width="150" height="42" rx="8" fill="#fffbeb" stroke="#b45309"/><text x="865" y="82" fill="#b45309">База / Известувања</text>
+  </g>
+
+  <!-- lifelines -->
+  <g stroke="#cbd5e1" stroke-width="1.3" stroke-dasharray="4,4">
+    <line x1="90" y1="98" x2="90" y2="610"/>
+    <line x1="290" y1="98" x2="290" y2="610"/>
+    <line x1="480" y1="98" x2="480" y2="610"/>
+    <line x1="670" y1="98" x2="670" y2="610"/>
+    <line x1="865" y1="98" x2="865" y2="610"/>
+  </g>
+
+  <g font-size="11.5" fill="#334155">
+    <!-- 1 -->
+    <line x1="90" y1="135" x2="478" y2="135" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="96" y="128">клик „Пријави се“</text>
+    <!-- 2 -->
+    <line x1="480" y1="170" x2="668" y2="170" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="486" y="163">POST /events/{id}/applications</text>
+    <!-- 3 -->
+    <line x1="670" y1="205" x2="863" y2="205" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="676" y="198">зачувај пријава (Pending)</text>
+    <!-- 4 -->
+    <line x1="670" y1="240" x2="863" y2="240" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="676" y="233">извести организатор (in-app + e-mail)</text>
+    <!-- 5 return -->
+    <line x1="670" y1="275" x2="482" y2="275" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sa)"/>
+    <text x="486" y="268" fill="#64748b">200 — пријавата е поднесена</text>
+    <line x1="480" y1="305" x2="92" y2="305" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sa)"/>
+    <text x="96" y="298" fill="#64748b">приказ на потврда</text>
+  </g>
+
+  <!-- separator -->
+  <line x1="20" y1="330" x2="940" y2="330" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="30" y="346" font-size="11.5" font-style="italic" fill="#94a3b8">подоцна — организаторот ги прегледува пријавите</text>
+
+  <g font-size="11.5" fill="#334155">
+    <!-- 6 -->
+    <line x1="290" y1="380" x2="478" y2="380" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="296" y="373">преглед на пријави · „Одобри“</text>
+    <!-- 7 -->
+    <line x1="480" y1="415" x2="668" y2="415" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="486" y="408">POST /events/{id}/applications/{appId}/approve</text>
+    <!-- 8 -->
+    <line x1="670" y1="450" x2="863" y2="450" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="676" y="443">статус=Approved; ако максимум → настан=Полн</text>
+    <!-- 9 -->
+    <line x1="670" y1="485" x2="863" y2="485" stroke="#334155" stroke-width="1.6" marker-end="url(#sa)"/>
+    <text x="676" y="478">извести учесник (одобрено: in-app + e-mail)</text>
+    <!-- 10 return -->
+    <line x1="670" y1="520" x2="482" y2="520" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sa)"/>
+    <text x="486" y="513" fill="#64748b">200</text>
+    <!-- 11 -->
+    <line x1="480" y1="550" x2="292" y2="550" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#sa)"/>
+    <text x="296" y="543" fill="#64748b">ажуриран приказ на учесници</text>
+  </g>
+</svg>
