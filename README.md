@@ -1,4 +1,4 @@
-# Sport Activity Organizer (EkipAY)
+# Sports Activity Organizer (EkipAY)
 
 Веб-платформа за организирање на рекреативни спортски настани
 
